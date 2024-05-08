@@ -13,14 +13,7 @@ builder.Services.AddMemoryCache();
 builder.Services.Configure<IpRateLimitOptions>((options) =>
 {
     options.GeneralRules = new List<RateLimitRule>
-        {
-            new RateLimitRule
-            {
-                Endpoint = "*:/login",
-                Limit = 5,
-                Period = "5m"  // Limit to 5 requests per 5 minutes
-            }
-        };
+        {};
 });
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
