@@ -6,13 +6,7 @@
         User GetUserByUserName(string username);
         User GetUserById(int id);
         bool UpdateUserRole(int id, string newRole);
-    }
-
-    public class User
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Role { get; set; }
-        public string Password { get; set; }
+        UserLoginReturnDto AuthenticateUser(string userName, string password);
+        public bool IsAccountLockedOut(string username);
     }
 }

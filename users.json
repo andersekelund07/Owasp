@@ -2,19 +2,25 @@
   {
     "Id": 1,
     "Username": "user1",
-    "Password": "pass1",
-    "Role": "User"
+    "Role": "Editor",
+    "Password": "user1"
   },
   {
     "Id": 2,
-    "Username": "user2",
-    "Password": "pass2",
-    "Role": "Admin"
+    "Username": "admin",
+    "Role": "Admin",
+    "Password": "admin"
   },
   {
     "Id": 3,
     "Username": "user3",
-    "Password": "pass3",
-    "Role": ""
+    "Role": "User",
+    "Password": "user3"
+  },
+  {
+    "Id": 4,
+    "Username": "editor",
+    "Role": "Editor",
+    "Password": "editor"
   }
 ]

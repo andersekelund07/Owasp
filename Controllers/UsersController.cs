@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SopraOwaspKata.Controllers
 {
@@ -34,12 +33,6 @@ namespace SopraOwaspKata.Controllers
         [HttpPut("{id}/role")]
         public IActionResult ChangeUserRole(int id, [FromBody] string newRole)
         {
-            string? userRole = HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
-            if (userRole != "Admin")
-            {
-                return StatusCode(403); // Forbidden
-            }
-
             if (_userRepository.UpdateUserRole(id, newRole))
             {
                 return Ok();
@@ -55,6 +48,25 @@ namespace SopraOwaspKata.Controllers
             if (user == null) return NotFound();
             // No role check implemented
             return Ok();
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] UserLoginDto userLogin)
+        {
+            if (_userRepository.IsAccountLockedOut(userLogin.Username))
+            {
+                return StatusCode(429, "Account is temporarily locked due to too many failed login attempts.");
+            }
+            var user = _userRepository.AuthenticateUser(userLogin.Username, userLogin.Password);
+            if (user.IsAuthenticated)
+            {
+                // This would ideally return a secure token or session ID.
+                return Ok(user);
+            }
+            else
+            {
+                return Unauthorized(user.Message);
+            }
         }
     }
 }
