@@ -69,10 +69,6 @@ namespace SopraOwaspKata.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserLoginDto userLogin)
         {
-            if (_userRepository.IsAccountLockedOut(userLogin.Username))
-            {
-                return StatusCode(429, "Account is temporarily locked due to too many failed login attempts.");
-            }
             var user = _userRepository.AuthenticateUser(userLogin.Username, userLogin.Password);
             if (user.IsAuthenticated)
             {

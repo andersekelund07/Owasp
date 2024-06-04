@@ -22,5 +22,11 @@
     "Username": "editor",
     "Role": "Editor",
     "Password": "editor"
+  },
+  {
+    "Id": 5,
+    "Username": "string",
+    "Role": "admin",
+    "Password": "string"
   }
 ]

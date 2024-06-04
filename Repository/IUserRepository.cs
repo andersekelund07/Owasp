@@ -10,7 +10,6 @@ namespace SopraOwaspKata.Repository
         User GetUserById(int id);
         bool UpdateUserRole(int id, string newRole);
         UserLoginReturnDto AuthenticateUser(string userName, string password);
-        public bool IsAccountLockedOut(string username);
         public bool CreateUser(CreateUserDto createUserDto);
     }
 }

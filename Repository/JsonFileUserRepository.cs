@@ -55,14 +55,6 @@ namespace SopraOwaspKata.Repository
 
         public UserLoginReturnDto AuthenticateUser(string userName, string password)
         {
-            if (IsAccountLockedOut(userName))
-            {
-                return new UserLoginReturnDto
-                {
-                    IsAuthenticated = false,
-                };
-            }
-
             var message = "";
             var user = GetUserByUserName(userName);
             if (user == null)
@@ -85,7 +77,6 @@ namespace SopraOwaspKata.Repository
 
             if (user.Password == password)
             {
-                ResetLockout(userName);
                 return new UserLoginReturnDto
                 {
                     IsAuthenticated = true,
@@ -94,45 +85,11 @@ namespace SopraOwaspKata.Repository
             }
             else
             {
-                RegisterFailedAttempt(userName);
                 return new UserLoginReturnDto
                 {
                     IsAuthenticated = false,
                 };
             }
-        }
-
-        public bool IsAccountLockedOut(string username)
-        {
-            if (_lockoutInfo.TryGetValue(username, out var lockoutDetails) && lockoutDetails.AttemptCount >= _lockoutThreshold)
-            {
-                if (DateTime.UtcNow - lockoutDetails.LastAttempt < _lockoutTime)
-                {
-                    return true; // User is locked out
-                }
-                else
-                {
-                    ResetLockout(username); // Reset on timeout
-                    return false;
-                }
-            }
-            return false;
-        }
-
-        private void RegisterFailedAttempt(string username)
-        {
-            _lockoutInfo.AddOrUpdate(username,
-                (1, DateTime.UtcNow), // if adding for the first time
-                (key, oldValue) => (oldValue.AttemptCount + 1, DateTime.UtcNow)); // if updating existing entry
-        }
-
-        private void ResetLockout(string username)
-        {
-            try
-            {
-                _lockoutInfo.TryUpdate(username, (0, DateTime.UtcNow), _lockoutInfo[username]);
-            }
-            catch { }
         }
 
         public bool CreateUser(CreateUserDto createUserDto)

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using AspNetCoreRateLimit;
 using SopraOwaspKata.Repository;
 using SopraOwaspKata.Handlers;
 
@@ -11,14 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddMemoryCache();
-builder.Services.Configure<IpRateLimitOptions>((options) =>
-{
-    options.GeneralRules = new List<RateLimitRule>
-        {};
-});
-builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
-builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
-builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 // Add services to the container.
 
 builder.Services.AddAuthentication(options =>
