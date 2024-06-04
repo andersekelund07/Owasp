@@ -1,9 +1,10 @@
-using SopraOwaspKata;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using AspNetCoreRateLimit;
+using SopraOwaspKata.Repository;
+using SopraOwaspKata.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 

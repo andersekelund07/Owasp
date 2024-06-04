@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using SopraOwaspKata.Dto;
+using SopraOwaspKata.Model;
 using System.Collections.Concurrent;
 using System.Text.Json;
 
-namespace SopraOwaspKata
+namespace SopraOwaspKata.Repository
 {
     public class JsonFileUserRepository : IUserRepository
     {
@@ -63,7 +65,8 @@ namespace SopraOwaspKata
 
             var message = "";
             var user = GetUserByUserName(userName);
-            if (user == null) {
+            if (user == null)
+            {
                 return new UserLoginReturnDto
                 {
                     IsAuthenticated = false,
@@ -76,7 +79,7 @@ namespace SopraOwaspKata
                 return new UserLoginReturnDto
                 {
                     IsAuthenticated = false,
-                    Message = "UserName does not match with password"
+                    Message = "UserName exists but does not match with password"
                 };
             }
 
@@ -130,6 +133,43 @@ namespace SopraOwaspKata
                 _lockoutInfo.TryUpdate(username, (0, DateTime.UtcNow), _lockoutInfo[username]);
             }
             catch { }
+        }
+
+        public bool CreateUser(CreateUserDto createUserDto)
+        {
+            var user = new User
+            {
+                Id = GetNewId(),
+                Password = createUserDto.Password,
+                Role = createUserDto.Role,
+                Username = createUserDto.UserName
+            };
+
+            // Load existing users from the JSON file
+            try
+            {
+                var existingUsersJson = File.ReadAllText(_filePath);
+                var existingUsers = System.Text.Json.JsonSerializer.Deserialize<List<User>>(existingUsersJson) ?? new List<User>();
+                existingUsers.Add(user);
+
+                // Serialize the updated list of users
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                var updatedUsersJson = System.Text.Json.JsonSerializer.Serialize(existingUsers, options);
+
+                // Write the updated data back to the JSON file
+                File.WriteAllText(_filePath, updatedUsersJson);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private int GetNewId()
+        {
+            var highestId = _users.OrderByDescending(x => x.Id).First();
+            return ++highestId.Id;
         }
     }
 }

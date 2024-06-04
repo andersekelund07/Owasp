@@ -1,4 +1,4 @@
-﻿namespace SopraOwaspKata
+﻿namespace SopraOwaspKata.Model
 {
 
     public class User

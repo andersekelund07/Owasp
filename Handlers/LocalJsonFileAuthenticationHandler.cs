@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using SopraOwaspKata.Repository;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
-namespace SopraOwaspKata
+namespace SopraOwaspKata.Handlers
 {
     public class LocalJsonFileAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {

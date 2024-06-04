@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace SopraOwaspKata.Controllers
 {
@@ -15,11 +16,18 @@ namespace SopraOwaspKata.Controllers
         };
 
         [Authorize(AuthenticationSchemes = "Bearer,LocalJson")]
-        [HttpGet("{userId}")]
+            [HttpGet("{userId}")]
         public IActionResult GetData(int userId)
         {
+            var currentUser = HttpContext.User;
             if (!Data.TryGetValue(userId, out string? value))
                 return NotFound();
+
+            string? currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (currentUserId == null || int.Parse(currentUserId) != userId)
+            {
+                return Unauthorized("You are not authorized to access this data.");
+            }
 
             if (!Data.ContainsKey(userId))
             {
